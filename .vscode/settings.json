@@ -1,0 +1,11 @@
+{
+    "nixEnvSelector.nixFile": "${workspaceFolder}/shell.nix",
+    "files.exclude": {
+        ".direnv": true,
+        ".terraform": true
+    },
+    "[terraform]": {
+        "editor.defaultFormatter": "hashicorp.terraform",
+        "editor.formatOnSave": true
+    }
+}

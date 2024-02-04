@@ -1,0 +1,2 @@
+provider "ns1" {}
+

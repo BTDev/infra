@@ -105,18 +105,17 @@ resource "ns1_record" "ipv4_aliases" {
 resource "ns1_record" "external" {
   for_each = {
     # Q0
-    quote     = "btqms.q0serv.com"
     cah       = "btcah.blackjack.literallyshit.net"
+    map       = "btmap.blackjack.literallyshit.net"
     mc        = "mc.digitalfall.net"
     minecraft = "mc.digitalfall.net"
-    map       = "btmap.blackjack.literallyshit.net"
     quotes    = "btquotes.blackjack.literallyshit.net"
     vault     = "btvault.blackjack.literallyshit.net"
-    wiki      = "btwiki.blackjack.literallyshit.net"
     voice     = "echo.literallyshit.net"
+    wiki      = "btwiki.blackjack.literallyshit.net"
     # Mal
-    radio    = "q-z.xyz"
     keyblade = "berrytube.tv"
+    radio    = "q-z.xyz"
     # Toast
     toast = "www.toastserv.com"
   }

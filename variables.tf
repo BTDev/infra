@@ -1,7 +1,13 @@
 variable "ipv4" {
-  type = string
+  description = "Primary IPv4 address of the BT server"
+
+  type     = string
+  nullable = false
 }
 
 variable "ipv6" {
-  type = string
+  description = "Primary IPv6 address of the BT server"
+
+  type     = string
+  nullable = false
 }

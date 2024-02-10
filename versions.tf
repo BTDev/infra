@@ -10,8 +10,9 @@ terraform {
   }
 
   required_providers {
-    ns1 = {
-      source = "ns1-terraform/ns1"
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "~> 4.24"
     }
   }
 }

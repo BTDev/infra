@@ -1,1 +1,1 @@
-provider "ns1" {}
+provider "cloudflare" {}

@@ -1,108 +1,87 @@
-resource "ns1_zone" "berrytube" {
-  zone = "berrytube.tv"
-  ttl  = 600 # 10 minutes
+resource "cloudflare_record" "ipv4" {
+  zone_id = cloudflare_zone.berrytube.id
+
+  name    = "ipv4"
+  proxied = false
+
+
+  type  = "A"
+  value = var.ipv4
+}
+resource "cloudflare_record" "ipv6" {
+  zone_id = cloudflare_zone.berrytube.id
+
+  name    = "ipv6"
+  proxied = false
+
+  type  = "AAAA"
+  value = var.ipv6
 }
 
-resource "ns1_record" "txt" {
-  zone = ns1_zone.berrytube.zone
+resource "cloudflare_record" "caa_issuewild" {
+  zone_id = cloudflare_zone.berrytube.id
 
-  domain = ns1_zone.berrytube.zone
-  type   = "TXT"
-  answers {
-    answer = "Go fuck yourself!"
-  }
-  answers {
-    answer = "google-site-verification=C4vWwhSPhiZKOBvA7hx4OJLDXbM3YupLNxwYsmoK3LI"
-  }
-  answers {
-    answer = "v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCsqPZQW0O8/7qkIV0T0ICYeLCAAz43YwdF6U0aTEwtKKh8Y2VFXp7jc+WbicmF7wZC/nnVdE8U/RBfIPZIwBuM+el7G96okldjvhZrBNPPYROVxse/br2fj2YZm1rIwzIBmfRYAHJH7l9chlUksHTiJUmIRMYDS/ToQiuzM56GuQIDAQAB"
-  }
-  answers {
-    answer = "v=spf1 include:_spf.google.com ~all"
+  name    = "berrytube.tv"
+  proxied = false
+
+  type = "CAA"
+  data {
+    flags = 0
+    tag   = "issuewild"
+    value = "letsencrypt.org"
   }
 }
+resource "cloudflare_record" "caa_issue" {
+  zone_id = cloudflare_zone.berrytube.id
 
-resource "ns1_record" "github_challenge" {
-  zone = ns1_zone.berrytube.zone
+  name    = "berrytube.tv"
+  proxied = false
 
-  domain = "_github-challenge-btdev.${ns1_zone.berrytube.zone}"
-  type   = "TXT"
-  answers {
-    answer = "f84a8b5a4e"
+  type = "CAA"
+  data {
+    flags = 0
+    tag   = "issue"
+    value = "letsencrypt.org"
   }
 }
+resource "cloudflare_record" "caa_iodef" {
+  zone_id = cloudflare_zone.berrytube.id
 
-resource "ns1_record" "caa" {
-  zone = ns1_zone.berrytube.zone
+  name    = "berrytube.tv"
+  proxied = false
 
-  domain = ns1_zone.berrytube.zone
-  type   = "CAA"
-  answers {
-    answer = "0 iodef mailto:btcaa@atte.fi"
-  }
-  answers {
-    answer = "0 issue letsencrypt.org"
-  }
-  answers {
-    answer = "0 issuewild letsencrypt.org"
-  }
-}
-
-resource "ns1_record" "mx" {
-  zone = ns1_zone.berrytube.zone
-
-  domain = ns1_zone.berrytube.zone
-  type   = "MX"
-  answers {
-    answer = "1 aspmx.l.google.com."
-  }
-  answers {
-    answer = "5 alt1.aspmx.l.google.com."
-  }
-  answers {
-    answer = "5 alt2.aspmx.l.google.com."
-  }
-  answers {
-    answer = "10 aspmx2.googlemail.com."
-  }
-  answers {
-    answer = "10 aspmx3.googlemail.com."
+  type = "CAA"
+  data {
+    flags = 0
+    tag   = "iodef"
+    value = "mailto:btcaa@atte.fi"
   }
 }
 
-resource "ns1_record" "ipv4" {
-  zone = ns1_zone.berrytube.zone
+resource "cloudflare_record" "root" {
+  zone_id = cloudflare_zone.berrytube.id
 
-  domain = ns1_zone.berrytube.zone
-  type   = "A"
-  answers {
-    answer = var.ipv4
-  }
+  name    = "berrytube.tv"
+  proxied = false
+
+  type  = "CNAME"
+  value = "ipv4.berrytube.tv"
 }
 
-resource "ns1_record" "ipv6" {
-  zone = ns1_zone.berrytube.zone
-
-  domain = "ipv6.${ns1_zone.berrytube.zone}"
-  type   = "AAAA"
-  answers {
-    answer = var.ipv6
-  }
-}
-
-resource "ns1_record" "ipv4_aliases" {
+resource "cloudflare_record" "ipv4_aliases" {
   for_each = toset(["direct", "btc", "btc-socket", "cdn", "socket", "www"])
 
-  zone = ns1_zone.berrytube.zone
+  zone_id = cloudflare_zone.berrytube.id
 
-  domain = "${each.value}.${ns1_zone.berrytube.zone}"
-  type   = "CNAME"
-  answers {
-    answer = "${ns1_record.ipv4.domain}."
-  }
+  name    = each.value
+  proxied = false
+
+  type  = "CNAME"
+  value = "berrytube.tv"
 }
 
-resource "ns1_record" "external" {
+
+resource "cloudflare_record" "external" {
   for_each = {
     # Q0
     cah       = "btcah.blackjack.literallyshit.net"
@@ -120,21 +99,75 @@ resource "ns1_record" "external" {
     toast = "www.toastserv.com"
   }
 
-  zone = ns1_zone.berrytube.zone
+  zone_id = cloudflare_zone.berrytube.id
 
-  domain = "${each.key}.${ns1_zone.berrytube.zone}"
-  type   = "CNAME"
-  answers {
-    answer = "${each.value}."
+  name    = each.key
+  proxied = false
+
+  type  = "CNAME"
+  value = each.value
+}
+
+resource "cloudflare_record" "teamspeak" {
+  zone_id = cloudflare_zone.berrytube.id
+
+  name    = "_ts3._udp"
+  proxied = false
+
+  type = "SRV"
+  data {
+    service  = "_ts3"
+    proto    = "_udp"
+    name     = "berrytube.tv"
+    priority = 0
+    weight   = 5
+    port     = 9987
+    target   = "echo.literallyshit.net"
   }
 }
 
-resource "ns1_record" "ts" {
-  zone = ns1_zone.berrytube.zone
-
-  domain = "_ts3._udp.${ns1_zone.berrytube.zone}"
-  type   = "SRV"
-  answers {
-    answer = "0 5 9987 echo.literallyshit.net."
+resource "cloudflare_record" "mx" {
+  for_each = {
+    "aspmx.l.google.com"      = 1
+    "alt1.aspmx.l.google.com" = 5
+    "alt2.aspmx.l.google.com" = 5
+    "aspmx2.googlemail.com"   = 10
+    "aspmx3.googlemail.com"   = 10
   }
+
+  zone_id = cloudflare_zone.berrytube.id
+
+  name    = "berrytube.tv"
+  proxied = false
+
+  type     = "MX"
+  priority = each.value
+  value    = each.key
+}
+
+resource "cloudflare_record" "txt" {
+  for_each = toset([
+    "Go fuck yourself!",
+    "google-site-verification=C4vWwhSPhiZKOBvA7hx4OJLDXbM3YupLNxwYsmoK3LI",
+    "v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCsqPZQW0O8/7qkIV0T0ICYeLCAAz43YwdF6U0aTEwtKKh8Y2VFXp7jc+WbicmF7wZC/nnVdE8U/RBfIPZIwBuM+el7G96okldjvhZrBNPPYROVxse/br2fj2YZm1rIwzIBmfRYAHJH7l9chlUksHTiJUmIRMYDS/ToQiuzM56GuQIDAQAB",
+    "v=spf1 include:_spf.google.com ~all"
+  ])
+
+  zone_id = cloudflare_zone.berrytube.id
+
+  name    = "berrytube.tv"
+  proxied = false
+
+  type  = "TXT"
+  value = each.value
+}
+
+resource "cloudflare_record" "github_challenge" {
+  zone_id = cloudflare_zone.berrytube.id
+
+  name    = "_github-challenge-btdev"
+  proxied = false
+
+  type  = "TXT"
+  value = "f84a8b5a4e"
 }

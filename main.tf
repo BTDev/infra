@@ -14,6 +14,8 @@ resource "cloudflare_zone_settings_override" "berrytube" {
 
   settings {
     security_level = "essentially_off"
+    challenge_ttl  = 57600 # 16 hours
+    browser_check  = "off"
 
     ssl             = "strict"
     min_tls_version = "1.2"
@@ -33,5 +35,8 @@ resource "cloudflare_page_rule" "sha1" {
 
     disable_apps  = true
     disable_zaraz = true
+
+    security_level = "essentially_off"
+    browser_check  = "off"
   }
 }

@@ -74,7 +74,7 @@ resource "cloudflare_record" "ipv4_aliases" {
   zone_id = cloudflare_zone.berrytube.id
 
   name    = each.value
-  proxied = false
+  proxied = contains([], each.value)
 
   type  = "CNAME"
   value = "berrytube.tv"
@@ -90,7 +90,7 @@ resource "cloudflare_record" "external" {
     minecraft = "mc.digitalfall.net"
     quotes    = "btquotes.blackjack.literallyshit.net"
     vault     = "btvault.blackjack.literallyshit.net"
-    voice     = "echo.literallyshit.net"
+    voice     = "q-z.xyz"
     wiki      = "btwiki.blackjack.literallyshit.net"
     # Mal
     keyblade = "berrytube.tv"
@@ -122,7 +122,7 @@ resource "cloudflare_record" "teamspeak" {
     priority = 0
     weight   = 5
     port     = 9987
-    target   = "echo.literallyshit.net"
+    target   = "q-z.xyz"
   }
 }
 

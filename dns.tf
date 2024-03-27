@@ -93,6 +93,7 @@ resource "cloudflare_record" "external" {
     voice     = "q-z.xyz"
     wiki      = "btwiki.blackjack.literallyshit.net"
     # Q0 (email)
+    mail         = "box.digitalfall.net"
     autoconfig   = "box.digitalfall.net"
     autodiscover = "box.digitalfall.net"
     # Mal

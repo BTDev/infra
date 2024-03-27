@@ -92,6 +92,9 @@ resource "cloudflare_record" "external" {
     vault     = "btvault.blackjack.literallyshit.net"
     voice     = "q-z.xyz"
     wiki      = "btwiki.blackjack.literallyshit.net"
+    # Q0 (email)
+    autoconfig   = "box.digitalfall.net"
+    autodiscover = "box.digitalfall.net"
     # Mal
     keyblade = "berrytube.tv"
     radio    = "q-z.xyz"
@@ -128,11 +131,7 @@ resource "cloudflare_record" "teamspeak" {
 
 resource "cloudflare_record" "mx" {
   for_each = {
-    "aspmx.l.google.com"      = 1
-    "alt1.aspmx.l.google.com" = 5
-    "alt2.aspmx.l.google.com" = 5
-    "aspmx2.googlemail.com"   = 10
-    "aspmx3.googlemail.com"   = 10
+    "box.digitalfall.net" = 10
   }
 
   zone_id = cloudflare_zone.berrytube.id
@@ -149,8 +148,7 @@ resource "cloudflare_record" "txt" {
   for_each = toset([
     "Go fuck yourself!",
     "google-site-verification=C4vWwhSPhiZKOBvA7hx4OJLDXbM3YupLNxwYsmoK3LI",
-    "v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCsqPZQW0O8/7qkIV0T0ICYeLCAAz43YwdF6U0aTEwtKKh8Y2VFXp7jc+WbicmF7wZC/nnVdE8U/RBfIPZIwBuM+el7G96okldjvhZrBNPPYROVxse/br2fj2YZm1rIwzIBmfRYAHJH7l9chlUksHTiJUmIRMYDS/ToQiuzM56GuQIDAQAB",
-    "v=spf1 include:_spf.google.com ~all"
+    "v=spf1 mx ~all"
   ])
 
   zone_id = cloudflare_zone.berrytube.id

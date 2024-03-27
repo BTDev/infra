@@ -148,12 +148,28 @@ resource "cloudflare_record" "txt" {
   for_each = toset([
     "Go fuck yourself!",
     "google-site-verification=C4vWwhSPhiZKOBvA7hx4OJLDXbM3YupLNxwYsmoK3LI",
-    "v=spf1 mx ~all"
+    "v=spf1 mx -all"
+    
   ])
 
   zone_id = cloudflare_zone.berrytube.id
 
   name    = "berrytube.tv"
+  proxied = false
+
+  type  = "TXT"
+  value = each.value
+}
+
+resource "cloudflare_record" "txt_subdomain" {
+  for_each = {
+    "_dmarc" = "v=DMARC1; p=quarantine;"
+    "mail._domainkey" = "v=DKIM1; h=sha256; k=rsa; s=email; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0fJVXFiz0LSlvRhfLMTA4M7ut0deBG6HAw8aB4rh2PkYDEBO0ILeIpR5ByQ5AsQHtQwHOIIFlKoMgVfw5h1mvRkbmQQpsoTgdRUGblqjq/Fgw8LvdpIFBUQb7NqB7co9Ot1NN8IqcJeHviiENdgJY5zU1EXA7iZVOfFulCQPTpI/XCJ1AbzCl1xw+pAqjPiBsq5Mkx+XKcidVuhhzdcKQxAi7p18IJG5p7W7BUR2nZhS9Ro3pqjLVHdA9l5TJSFHyTDzzfuOLVg2iKA78P8q0SNFr7VII0OVzp+WqnG3fy5YQKb2T+1rerCkTuJycOgXoXqDTimJxlsFVi9Y7uec9wIDAQAB"
+  }
+
+  zone_id = cloudflare_zone.berrytube.id
+
+  name    = "${each.key}.berrytube.tv"
   proxied = false
 
   type  = "TXT"

@@ -95,7 +95,7 @@ resource "cloudflare_record" "external" {
     # Q0 (email)
     mail         = "box.digitalfall.net"
     autoconfig   = "box.digitalfall.net"
-    autodiscover = "box.digitalfall.net"
+    mta-sts      = "box.digitalfall.net"
     # Mal
     keyblade = "berrytube.tv"
     radio    = "q-z.xyz"
@@ -110,6 +110,24 @@ resource "cloudflare_record" "external" {
 
   type  = "CNAME"
   value = each.value
+}
+
+resource "cloudflare_record" "autodiscover" {
+  zone_id = cloudflare_zone.berrytube.id
+
+  name    = "_autodiscover._tcp"
+  proxied = false
+
+  type = "SRV"
+  data {
+    service  = "_autodiscover"
+    proto    = "_tcp"
+    name     = "berrytube.tv"
+    priority = 1
+    weight   = 1
+    port     = 443
+    target   = "box.digitalfall.net"
+  }
 }
 
 resource "cloudflare_record" "teamspeak" {

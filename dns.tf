@@ -69,7 +69,7 @@ resource "cloudflare_record" "root" {
 }
 
 resource "cloudflare_record" "ipv4_aliases" {
-  for_each = toset(["direct", "btc", "btc-socket", "cdn", "socket", "www"])
+  for_each = toset(["direct", "btc", "btc-socket", "cdn", "socket", "www", "tubecg"])
 
   zone_id = cloudflare_zone.berrytube.id
 
@@ -168,7 +168,6 @@ resource "cloudflare_record" "txt" {
     "Go fuck yourself!",
     "google-site-verification=C4vWwhSPhiZKOBvA7hx4OJLDXbM3YupLNxwYsmoK3LI",
     "v=spf1 mx -all"
-    
   ])
 
   zone_id = cloudflare_zone.berrytube.id

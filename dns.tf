@@ -79,10 +79,6 @@ resource "cloudflare_record" "ipv4_aliases" {
   content = "berrytube.tv"
 }
 
-import {
-  id = "12359a57d84f8aa13386c4209c4dbd34/9c3baa2c70964e43f10331e9ee6d2da1"
-  to = cloudflare_record.external["tf2"]
-}
 resource "cloudflare_record" "external" {
   for_each = {
     # Q0

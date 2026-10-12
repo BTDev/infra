@@ -4,9 +4,8 @@ resource "cloudflare_record" "ipv4" {
   name    = "ipv4"
   proxied = false
 
-
-  type  = "A"
-  value = var.ipv4
+  type    = "A"
+  content = var.ipv4
 }
 resource "cloudflare_record" "ipv6" {
   zone_id = cloudflare_zone.berrytube.id
@@ -14,8 +13,8 @@ resource "cloudflare_record" "ipv6" {
   name    = "ipv6"
   proxied = false
 
-  type  = "AAAA"
-  value = var.ipv6
+  type    = "AAAA"
+  content = var.ipv6
 }
 
 resource "cloudflare_record" "caa_issuewild" {
@@ -64,8 +63,8 @@ resource "cloudflare_record" "root" {
   name    = "berrytube.tv"
   proxied = false
 
-  type  = "CNAME"
-  value = "ipv4.berrytube.tv"
+  type    = "CNAME"
+  content = "ipv4.berrytube.tv"
 }
 
 resource "cloudflare_record" "ipv4_aliases" {
@@ -76,11 +75,14 @@ resource "cloudflare_record" "ipv4_aliases" {
   name    = each.value
   proxied = contains([], each.value)
 
-  type  = "CNAME"
-  value = "berrytube.tv"
+  type    = "CNAME"
+  content = "berrytube.tv"
 }
 
-
+import {
+  id = "12359a57d84f8aa13386c4209c4dbd34/9c3baa2c70964e43f10331e9ee6d2da1"
+  to = cloudflare_record.external["tf2"]
+}
 resource "cloudflare_record" "external" {
   for_each = {
     # Q0
@@ -89,6 +91,7 @@ resource "cloudflare_record" "external" {
     mc        = "mc.digitalfall.net"
     minecraft = "mc.digitalfall.net"
     quotes    = "btquotes.blackjack.literallyshit.net"
+    tf2       = "tf2.digitalfall.net"
     vault     = "btvault.blackjack.literallyshit.net"
     voice     = "q-z.xyz"
     wiki      = "btwiki.blackjack.literallyshit.net"
@@ -108,8 +111,8 @@ resource "cloudflare_record" "external" {
   name    = each.key
   proxied = false
 
-  type  = "CNAME"
-  value = each.value
+  type    = "CNAME"
+  content = each.value
 }
 
 resource "cloudflare_record" "autodiscover" {
@@ -160,7 +163,7 @@ resource "cloudflare_record" "mx" {
 
   type     = "MX"
   priority = each.value
-  value    = each.key
+  content  = each.key
 }
 
 resource "cloudflare_record" "txt" {
@@ -175,8 +178,8 @@ resource "cloudflare_record" "txt" {
   name    = "berrytube.tv"
   proxied = false
 
-  type  = "TXT"
-  value = each.value
+  type    = "TXT"
+  content = each.value
 }
 
 resource "cloudflare_record" "txt_subdomain" {
@@ -190,8 +193,8 @@ resource "cloudflare_record" "txt_subdomain" {
   name    = "${each.key}.berrytube.tv"
   proxied = false
 
-  type  = "TXT"
-  value = each.value
+  type    = "TXT"
+  content = each.value
 }
 
 resource "cloudflare_record" "github_challenge" {
@@ -200,6 +203,6 @@ resource "cloudflare_record" "github_challenge" {
   name    = "_github-challenge-btdev"
   proxied = false
 
-  type  = "TXT"
-  value = "f84a8b5a4e"
+  type    = "TXT"
+  content = "f84a8b5a4e"
 }
